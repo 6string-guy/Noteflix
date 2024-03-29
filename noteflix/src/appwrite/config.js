@@ -77,9 +77,56 @@ export class Service{
             throw error
         }
     }
-    async getPosts( ){
-        
+    async getPosts(quries=[Query.equal("status", "active")]) {
+        try {
+            return  await this.database.listDocuments.listDocuments(
+                import.meta.env.VITE_APPWRITE_DATABASE_ID,
+                import.meta.env.VITE_APPWRITE_COLLECTION_ID,
+                quries
+            )
+            
+        } catch (error) {
+            throw error
+            return false;
+        }
     }
+
+
+
+    //file upload method
+    async uploadFile( file)
+    {
+        try {
+            return await this.bucket.createFile(
+                import.meta.env.VITE_APPWRITE_BUCKET_ID,
+                ID.unique(),
+                file
+            ) 
+            
+        } catch (error) {
+            throw error
+            return false;
+        }
+    }
+
+    async delete ( fileId){
+        try {
+            await this.bucket.deleteFile(fileId)
+            
+        } catch (error) {
+            throw error
+            return false;
+        }
+    }
+    getFilePreview(fileId)
+    {
+        return this.bucket.getFilePreview(
+            import.meta.env.VITE_APPWRITE_BUCKET_ID,
+            fileId
+        )
+
+    }
+    
 }
 const service =new Service()
 
